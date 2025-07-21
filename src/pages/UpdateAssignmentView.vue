@@ -82,7 +82,7 @@ async function submitForm() {
       <div class="flex flex-col">
         <h3 class="font-poppins text-primary-500 mt-5 text-subtitle font-semibold">Due Date</h3>
         <input
-          class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4"
+          class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4 pr-4"
           type="date"
           v-model="dueDate"
         />

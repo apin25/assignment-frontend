@@ -64,7 +64,7 @@ async function submitForm() {
         <input
           v-model="dueDate"
           type="date"
-          class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4"
+          class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4 pr-4"
         />
       </div>
     </div>
