@@ -188,7 +188,7 @@ function applyFilter() {
       <th class="px-6 py-3 text-plain font-semibold text-white">Title</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Course</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Owner</th>
-      <th class="px-6 py-3 text-plain font-semibold text-white">Due</th>
+      <th class="px-6 py-3 text-plain font-semibold text-white">Due Date</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Created At</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Action</th>
     </tr>
