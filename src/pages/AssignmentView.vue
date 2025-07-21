@@ -1,11 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
+import { onMounted, ref } from 'vue'
+import { useAssignmentStore } from '@/stores/assignment'
+import { useToast } from 'vue-toastification';
+import router from '@/router'
+import { useRoute } from 'vue-router';
+const route = useRoute();
+const toast = useToast();
 const dropdowns = ref({
   owner: false,
   course: false,
   status: false,
 })
+const assignmentStore = useAssignmentStore();
+const loading = ref(true);
 
 function toggleDropdown(type: 'owner' | 'course' | 'status') {
   for (const key in dropdowns.value) {
@@ -13,6 +20,29 @@ function toggleDropdown(type: 'owner' | 'course' | 'status') {
   }
   dropdowns.value[type] = true
 }
+
+onMounted(async () => {
+  loading.value = true;
+  await assignmentStore.getAssignments();
+  console.log('Assignment di template:', assignmentStore.assignments);
+  loading.value = false;
+});
+
+const deleteAssignment = async (id: string) => {
+  const confirmed = confirm("Are you sure you want to delete this assignment?");
+  if (!confirmed) return;
+
+  try {
+    await assignmentStore.deleteAssignment(id);
+    toast.success("Assignment deleted successfully.");
+    router.push("/assignments")
+  } catch (error) {
+    toast.error("Failed to delete appointment.");
+  }
+};
+
+const formatDate = (date: string) => new Date(date).toLocaleDateString();
+const formatDateTime = (dateTime: string) => new Date(dateTime).toLocaleString();
 </script>
 
 <template>
@@ -39,7 +69,6 @@ function toggleDropdown(type: 'owner' | 'course' | 'status') {
         </div>
       </div>
 
-      <!-- Dropdown Course -->
       <div class="relative">
         <button @click="toggleDropdown('course')" class="dropdown-button">
           Pilih Course ▼
@@ -67,34 +96,47 @@ function toggleDropdown(type: 'owner' | 'course' | 'status') {
     </router-link>
     </div>
 
-<table class="min-w-[90%] divide-y divide-mint-200 mt-4 rounded-lg shadow overflow-hidden text-center">
+<table class="min-w-[90%] divide-y divide-mint-200 mt-4 rounded-lg shadow overflow-hidden text-center mb-6">
   <thead class="bg-mint-500">
     <tr>
+      <th class="px-6 py-3 text-plain font-semibold text-white">No</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">ID</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Title</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Course</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Owner</th>
-      <th class="px-6 py-3 text-plain font-semibold text-white">Created</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Due</th>
+      <th class="px-6 py-3 text-plain font-semibold text-white">Created At</th>
       <th class="px-6 py-3 text-plain font-semibold text-white">Action</th>
     </tr>
   </thead>
   <tbody class="bg-white divide-y divide-gray-200">
-    <tr class="hover:bg-gray-50">
-      <td class="px-6 py-4 text-sm text-gray-900">1</td>
-      <td class="px-6 py-4 text-sm text-gray-900">Belajar Vue</td>
-      <td class="px-6 py-4 text-sm text-gray-900">Vue.js</td>
-      <td class="px-6 py-4 text-sm text-gray-900">Alvin</td>
-      <td class="px-6 py-4 text-sm text-gray-900">2025-07-20</td>
-      <td class="px-6 py-4 text-sm text-gray-900">2025-07-31</td>
-      <td class="px-6 py-4 text-sm text-gray-900 space-x-1">
-        <button class="text-white text-plain bg-secondary-500 px-3 py-3 rounded-md">Detail</button>
-        <button class="text-white text-plain bg-accent-500 px-3 py-3 rounded-md">Edit</button>
-        <button class="text-white text-plain bg-primary-700 px-3 py-3 rounded-md">Delete</button>
-      </td>
-    </tr>
-  </tbody>
+<tr
+  v-for="(assignment, index) in assignmentStore.assignments"
+  :key="assignment.id"
+  :class="{ 'bg-primary-200': new Date(assignment.dueDate) < new Date() }"
+>
+    <td class="py-4 text-sm text-gray-900">{{ index + 1 }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ assignment.id }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ assignment.title }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ assignment.course }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ assignment.owner }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ formatDate(assignment.dueDate) }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900">{{ formatDateTime(assignment.createdAt) }}</td>
+    <td class="px-6 py-4 text-sm text-gray-900 space-x-1">
+    <router-link :to="`/assignments/${assignment.id}`">
+      <button class="text-white text-plain bg-secondary-500 px-3 py-3 rounded-md">Detail</button>
+    </router-link>
+    <router-link :to="`/assignments/${assignment.id}/edit`">
+      <button class="text-white text-plain bg-accent-500 px-3 py-3 rounded-md">Edit</button>
+    </router-link>
+      <button class="text-white text-plain bg-primary-700 px-3 py-3 rounded-md" @click="deleteAssignment(assignment.id)">Delete</button>
+    </td>
+  </tr>
+</tbody>
+
 </table>
+
+
   </div>
 </template>
 
