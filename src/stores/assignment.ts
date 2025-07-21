@@ -20,32 +20,40 @@ export const useAssignmentStore = defineStore('assignment', {
   }),
   
   actions: {
-    async getAssignments() {
-      this.loading = true;
-      this.error = null;
-      const token = Cookies.get('token');
+async getAssignments(course?: string, owner?: string, status?: string, title?: string) {
+  this.loading = true;
+  this.error = null;
+  const token = Cookies.get('token');
 
-      try {
-        const response = await fetch(`http://localhost:8080/api/assignments`, {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+  const params = new URLSearchParams();
+  if (course) params.append('course', course);
+  if (owner) params.append('owner', owner);
+  if (status) {
+    // frontend pakai "Overdue" / "On Time", backend pakai "overDue" / "onTime"
+    params.append('dueStatus', status === 'Overdue' ? 'overDue' : 'onTime');
+  }
+  if (title) params.append('title', title);
 
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data: CommonResponseInterface<AssignmentInterface[]> = await response.json();
-        this.assignments = data.data;
-        useToast().success('Berhasil mengambil daftar assignment');
-      } catch (err) {
-        this.error = `Gagal mengambil assignment: ${(err as Error).message}`;
-        useToast().error(this.error);
-      } finally {
-        this.loading = false;
-      }
-    },
+  try {
+    const response = await fetch(`http://localhost:8080/api/assignments?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
 
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    const data: CommonResponseInterface<AssignmentInterface[]> = await response.json();
+    this.assignments = data.data;
+    useToast().success('Berhasil mengambil daftar assignment');
+  } catch (err) {
+    this.error = `Gagal mengambil assignment: ${(err as Error).message}`;
+    useToast().error(this.error);
+  } finally {
+    this.loading = false;
+  }
+},
     async addAssignment(body: AssignmentRequestInterface) {
       this.loading = true;
       this.error = null;
