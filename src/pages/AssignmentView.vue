@@ -82,9 +82,18 @@ const selected = ref({
   status: '' as string,
 })
 function selectDropdown(type: 'owner' | 'course' | 'status', value: string) {
-  selected.value[type] = value
-  dropdowns.value[type] = false // tutup dropdown setelah pilih
+  if (
+    value === 'Pilih Owner' ||
+    value === 'Pilih Course' ||
+    value === 'Pilih Status'
+  ) {
+    selected.value[type] = ''
+  } else {
+    selected.value[type] = value
+  }
+  dropdowns.value[type] = false
 }
+
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString()
 const formatDateTime = (dateTime: string) => new Date(dateTime).toLocaleString()
@@ -124,10 +133,16 @@ function applyFilter() {
       <!-- Dropdown Owner -->
       <div class="relative">
   <button @click="toggleDropdown('owner')" class="dropdown-button">
-    {{ selected.owner || 'Pilih Owner' }} ▼
+    {{ selected.owner || 'Select Owner' }} ▼
   </button>
   <div v-if="dropdowns.owner" class="dropdown-menu">
     <ul>
+      <li
+  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+  @click="selectDropdown('owner', 'Select Owner')"
+>
+  Select Owner
+</li>
       <li
         v-for="owner in uniqueOwners"
         :key="owner"
@@ -142,10 +157,17 @@ function applyFilter() {
 
       <div class="relative">
   <button @click="toggleDropdown('course')" class="dropdown-button">
-    {{ selected.course || 'Pilih Course' }} ▼
+    {{ selected.course || 'Select Course' }} ▼
   </button>
   <div v-if="dropdowns.course" class="dropdown-menu">
     <ul>
+      <li
+  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+  @click="selectDropdown('course', 'Select Course')"
+>
+  All Courses
+</li>
+
       <li
         v-for="course in uniqueCourses"
         :key="course"
@@ -160,13 +182,24 @@ function applyFilter() {
 
       <div class="relative">
   <button @click="toggleDropdown('status')" class="dropdown-button">
-    {{ selected.status || 'Pilih Status' }} ▼
+    {{ selected.status || 'Select Status' }} ▼
   </button>
   <div v-if="dropdowns.status" class="dropdown-menu">
     <ul>
       <ul>
-  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'Overdue')">Overdue</li>
-  <li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'On Time')">On Time</li>
+  <li
+  class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+  @click="selectDropdown('status', 'Select Status')"
+>
+  All Status
+</li>
+<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'Overdue')">
+  Overdue
+</li>
+<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'On Time')">
+  On Time
+</li>
+
 </ul>
     </ul>
   </div>

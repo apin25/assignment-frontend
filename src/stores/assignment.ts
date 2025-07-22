@@ -29,7 +29,7 @@ async getAssignments(course?: string, owner?: string, status?: string, title?: s
   if (course) params.append('course', course);
   if (owner) params.append('owner', owner);
   if (status) {
-    // frontend pakai "Overdue" / "On Time", backend pakai "overDue" / "onTime"
+
     params.append('dueStatus', status === 'Overdue' ? 'overDue' : 'onTime');
   }
   if (title) params.append('title', title);
