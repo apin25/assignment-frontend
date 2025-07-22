@@ -81,18 +81,11 @@ const selected = ref({
   course: '' as string,
   status: '' as string,
 })
-function selectDropdown(type: 'owner' | 'course' | 'status', value: string) {
-  if (
-    value === 'Pilih Owner' ||
-    value === 'Pilih Course' ||
-    value === 'Pilih Status'
-  ) {
-    selected.value[type] = ''
-  } else {
-    selected.value[type] = value
-  }
+function selectDropdown(type: 'owner' | 'course' | 'status', value: string | null) {
+  selected.value[type] = value || ''; 
   dropdowns.value[type] = false
 }
+
 
 
 const formatDate = (date: string) => new Date(date).toLocaleDateString()
@@ -193,10 +186,10 @@ function applyFilter() {
 >
   All Status
 </li>
-<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'Overdue')">
+<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'overDue')">
   Overdue
 </li>
-<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'On Time')">
+<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" @click="selectDropdown('status', 'onTime')">
   On Time
 </li>
 
