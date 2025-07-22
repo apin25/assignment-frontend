@@ -117,7 +117,7 @@ function applyFilter() {
 <input
   v-model="searchQuery"
   class="h-12 w-[800px] bg-secondary-100 mt-2 rounded-lg pl-4"
-  placeholder="Search"
+  placeholder="Search by Title"
 />
 
         <button
@@ -139,9 +139,9 @@ function applyFilter() {
     <ul>
       <li
   class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-  @click="selectDropdown('owner', 'Select Owner')"
+  @click="selectDropdown('owner', null)"
 >
-  Select Owner
+  All Owners
 </li>
       <li
         v-for="owner in uniqueOwners"
@@ -163,7 +163,7 @@ function applyFilter() {
     <ul>
       <li
   class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-  @click="selectDropdown('course', 'Select Course')"
+  @click="selectDropdown('course', null)"
 >
   All Courses
 </li>
@@ -189,7 +189,7 @@ function applyFilter() {
       <ul>
   <li
   class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-  @click="selectDropdown('status', 'Select Status')"
+  @click="selectDropdown('status', null)"
 >
   All Status
 </li>

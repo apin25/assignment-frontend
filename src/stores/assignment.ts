@@ -28,10 +28,7 @@ async getAssignments(course?: string, owner?: string, status?: string, title?: s
   const params = new URLSearchParams();
   if (course) params.append('course', course);
   if (owner) params.append('owner', owner);
-  if (status) {
-
-    params.append('dueStatus', status === 'Overdue' ? 'overDue' : 'onTime');
-  }
+  if (status) params.append('status', status)
   if (title) params.append('title', title);
 
   try {
