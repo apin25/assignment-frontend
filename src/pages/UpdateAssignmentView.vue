@@ -27,9 +27,16 @@ onMounted(async () => {
   }
 });
 
+const tomorrow = new Date()
+tomorrow.setDate(tomorrow.getDate() + 1)
+
+const minDate = tomorrow.toISOString().split('T')[0]
 async function submitForm() {
   const id = route.params.id as string;
-
+  if (!dueDate.value || dueDate.value < minDate) {
+    alert("Tanggal tidak valid. Harus mulai dari besok.");
+    return;
+  }
   try {
     const payload = {
       title: title.value,
@@ -45,6 +52,7 @@ async function submitForm() {
     toast.error("Failed to update assignment.");
   }
 }
+
 </script>
 
 <template>
@@ -85,6 +93,7 @@ async function submitForm() {
           class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4 pr-4"
           type="date"
           v-model="dueDate"
+          :min="minDate"
         />
       </div>
     </div>

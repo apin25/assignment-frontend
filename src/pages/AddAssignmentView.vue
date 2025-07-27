@@ -10,9 +10,17 @@ const title = ref('');
 const course = ref('');
 const owner = ref('');
 const dueDate = ref('');
+const tomorrow = new Date()
+tomorrow.setDate(tomorrow.getDate() + 1)
+
+const minDate = tomorrow.toISOString().split('T')[0]
 
 async function submitForm() {
   try {
+    if (!dueDate.value || dueDate.value < minDate) {
+      alert("Tanggal tidak valid. Harus mulai dari besok.");
+      return;
+    }
     const payload = {
       title: title.value,
       course: course.value,
@@ -61,11 +69,12 @@ async function submitForm() {
       </div>
       <div class="flex flex-col">
         <h3 class="font-poppins text-primary-500 mt-5 text-subtitle font-semibold">Due Date</h3>
-        <input
-          v-model="dueDate"
-          type="date"
-          class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4 pr-4"
-        />
+          <input
+            v-model="dueDate"
+            type="date"
+            class="h-12 w-[500px] bg-primary-100 mt-2 rounded-lg pl-4 pr-4"
+            :min="minDate"
+          />
       </div>
     </div>
 

@@ -30,13 +30,17 @@ const logout = () => {
 <template>
   <nav
     v-if="!shouldHideNavbar"
-    class="flex justify-between items-center px-4 py-3 bg-primary-500 text-white shadow-md"
+    class="flex justify-between items-center px-4 py-3 bg-primary-500 text-white shadow-md font-poppins"
   >
-  <router-link to="/assignments">
-    <div class="text-title font-bold">
-      SceleNG
+    <div class="flex flex-row items-center gap-x-10">
+        <p class="text-title font-bold">SceleNG</p>
+      <router-link to="/assignments">
+        <p class="font-semibold text-lg text-center">Assignments</p>
+      </router-link>
+      <router-link to="/wiki">
+         <p class="font-semibold text-lg text-center">Wiki</p>
+      </router-link>
     </div>
-  </router-link>
 
     <div class="flex items-center gap-4">
       <span class="font-medium">{{ authStore.user?.username }}</span>
