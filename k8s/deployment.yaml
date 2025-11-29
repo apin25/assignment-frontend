@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scele-fe-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scele-fe-app
+  template:
+    metadata:
+      labels:
+        app: scele-fe-app
+    spec:
+      containers:
+        - name: scele-fe-app
+          image: hafizmuh/scele-fe-app:REPLACE_ME_TAG
+          ports:
+            - containerPort: 80
